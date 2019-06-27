@@ -1,5 +1,6 @@
-import {Robot} from './Robot'
+import { Robot } from './Robot'
+import { COMMEND } from './utils/consts'
 
-let robot = new Robot(2,3);
+let robot = new Robot();
+robot.excute(["PLACE 1,2,EAST", "MOVE", "MOVE", "LEFT", "MOVE","REPORT"], 4, 4);
 
-console.log(robot.place(1,2));
