@@ -1,4 +1,5 @@
-import { DIRECTION, ROATATE, Exception, COMMEND } from './utils/consts';
+import { DIRECTION, ROATATE, COMMAND } from './utils/consts';
+import { printInfo } from './utils/printUtils'
 
 class Robot {
     constructor(x, y, direction) {
@@ -8,80 +9,105 @@ class Robot {
         this.direction = direction;
     }
 
+    /**
+     * robot move
+     * @param {number} maxX  the maximum value of the X-axis
+     * @param {number} maxY  the maximum value of the Y-axis
+     */
     move(maxX, maxY) {
         let { x, y, direction } = this;
         switch (direction) {
             case DIRECTION.EAST:
-                x++;
+                if (x < maxX) x++;
                 break;
             case DIRECTION.WEST:
-                x--;
+                if (x > 0) x--;
                 break;
             case DIRECTION.SOUTH:
-                y--;
+                if (y > 0) y--;
                 break;
             case DIRECTION.NORTH:
-                y++;
+                if (y < maxY) y++;
                 break;
             default:
                 break;
-        }
-        if (x > maxX || x < 0 || y > maxY || y < 0) {
-            throw new Exception.InvalidDirectionError;
         }
         this.x = x;
         this.y = y;
         return this;
     }
 
-    rotate(rotate) {
+    /**
+     * robot rotate
+     * @param {String} newDirection  direction of rotate
+     */
+    rotate(newDirection) {
         let { direction } = this;
         switch (direction) {
             case DIRECTION.EAST:
-                direction = rotate == ROATATE.LEFT ? DIRECTION.NORTH : direction.SOUTH;
+                direction = newDirection == ROATATE.LEFT ? DIRECTION.NORTH : DIRECTION.SOUTH;
                 break;
             case DIRECTION.WEST:
-                direction = rotate == ROATATE.LEFT ? DIRECTION.SOUTH : direction.NORTH;
+                direction = newDirection == ROATATE.LEFT ? DIRECTION.SOUTH : DIRECTION.NORTH;
                 break;
             case DIRECTION.SOUTH:
-                direction = rotate == ROATATE.LEFT ? DIRECTION.NORTH : direction.WEST;
+                direction = newDirection == ROATATE.LEFT ? DIRECTION.EAST : DIRECTION.WEST;
                 break;
             case DIRECTION.NORTH:
-                direction = rotate == ROATATE.LEFT ? DIRECTION.NORTH : direction.EAST;
+                direction = newDirection == ROATATE.LEFT ? DIRECTION.WEST : DIRECTION.EAST;
                 break;
             default:
                 break;
         }
+
         this.direction = direction;
         return this;
     }
 
+    /**
+     * robot report
+     */
     report() {
+        if(!this.isPlaced) {
+            printInfo(`Warning: this robot has never been placed`);
+        }
         let { x, y, direction } = this;
-        return [x, y, direction].join(",");
+        printInfo(`Output: ${[x, y, direction].join(",")}`);
     }
 
-    excute(commends = [], maxX = 4, maxY = 4) {
-        let robot = new Robot();
-        let flag = 0;
-        commends.forEach((element, index) => {
-            if (element.indexOf(COMMEND.PLACE) > -1) {
+    /**
+     * robot excute
+     * @param {Array} commands the list of commands
+     * @param {Object} tableSize table size
+     */
+    excute(commands = [], tableSize = {}) {
+
+        const maxX = tableSize.length - 1 || 4;
+        const maxY = tableSize.width - 1 || 4;
+
+        commands.forEach((element) => {
+            if (element.indexOf(COMMAND.PLACE) > -1) {
                 let array = element.split(' ')[1].split(',');
-                robot = new Robot(array[0], array[1], array[2]);
-                robot.isPlaced = true;
-                flag = index;
+                let x = array[0];
+                let y = array[1];
+                if (x >= 0 && y >= 0 && x <= maxX && y <= maxY) {
+                    this.x = x;
+                    this.y = y;
+                    this.direction = array[2];
+                    this.isPlaced = true;
+                }
             }
-            if (index > flag && robot.isPlaced) {
+            if (this.isPlaced) {
                 switch (element) {
-                    case COMMEND.REPORT:
-                        console.log(robot.report());
+                    case COMMAND.REPORT:
+                        this.report();
                         break;
-                    case COMMEND.MOVE:
-                        robot.move(maxX, maxY);
+                    case COMMAND.MOVE:
+                        this.move(maxX, maxY);
                         break;
-                    case COMMEND.LEFT:
-                    case COMMEND.RIGHT:
-                        robot.rotate(element)
+                    case COMMAND.LEFT:
+                    case COMMAND.RIGHT:
+                        this.rotate(element)
                         break;
                     default:
                         break;

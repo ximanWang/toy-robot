@@ -15,10 +15,24 @@ export const Exception = {
     InvalidLocationError: 'Invalid location error',
 }
 
-export const COMMEND = {
+export const COMMAND = {
     PLACE: "PLACE",
     MOVE: "MOVE",
     LEFT: "LEFT",
     RIGHT: "RIGHT",
     REPORT: "REPORT"
+}
+
+export const PLACE_COMMAND_REPLACEMENTS = {
+    XIndex: '{X}',
+    YIndex: '{Y}',
+    Direction: '{F}',
+}
+
+export const COMMAND_TEMPALTE = {
+    MOVE: 'MOVE',
+    LEFT: 'LEFT',
+    RIGHT: 'RIGHT',
+    REPORT: 'REPORT',
+    PLACE: 'PLACE {X},{Y},{F}',
 }
