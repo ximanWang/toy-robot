@@ -68,9 +68,6 @@ class Robot {
      * robot report
      */
     report() {
-        if(!this.isPlaced) {
-            printInfo(`Warning: this robot has never been placed`);
-        }
         let { x, y, direction } = this;
         printInfo(`Output: ${[x, y, direction].join(",")}`);
     }
@@ -82,8 +79,8 @@ class Robot {
      */
     excute(commands = [], tableSize = {}) {
 
-        const maxX = tableSize.length - 1 || 4;
-        const maxY = tableSize.width - 1 || 4;
+        const maxX = tableSize.width - 1 || 4;
+        const maxY = tableSize.height - 1 || 4;
 
         commands.forEach((element) => {
             if (element.indexOf(COMMAND.PLACE) > -1) {

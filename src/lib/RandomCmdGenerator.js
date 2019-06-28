@@ -1,5 +1,5 @@
 import { COMMAND_TEMPALTE, PLACE_COMMAND_REPLACEMENTS, DIRECTION } from '../utils/consts'
-
+const maxCommandsNum = 30;
 /**
  * Random instruction generator
  */
@@ -13,13 +13,12 @@ class RandomCommandGenerator {
 
     /**
      * generate total random commands
-     * @param {Number} numberOfCommands 
      * @param {Object} tableSize 
      */
-    generateTotalRandomCommands(numberOfCommands, tableSize = {}) {
-        if (numberOfCommands <= 0) {
-            return;
-        }
+    generateTotalRandomCommands(tableSize = {}) {
+
+        // number of generated commands
+        const numberOfCommands = this.getRandomInt(maxCommandsNum);
 
         let generatedCommands = [];
         for (let index = 0; index < numberOfCommands; index++) {
@@ -40,8 +39,8 @@ class RandomCommandGenerator {
     generateRandomPlaceCommand(tableSize) {
         let placeCommand = COMMAND_TEMPALTE.PLACE;
 
-        const randomXIndex = this.getRandomInt(tableSize.length || 5);
-        const randomYIndex = this.getRandomInt(tableSize.width || 5);
+        const randomXIndex = this.getRandomInt(tableSize.width || 5);
+        const randomYIndex = this.getRandomInt(tableSize.height || 5);
         const randomDirection = this.directionValues[this.getRandomInt(this.directionValues.length)];
 
         placeCommand = placeCommand.replace(PLACE_COMMAND_REPLACEMENTS.XIndex, randomXIndex);
@@ -52,7 +51,7 @@ class RandomCommandGenerator {
     }
 
     /**
-     * get random integer form [0, max)
+     * get random integer from [0, max)
      * @param {Number} max 
      */
     getRandomInt(max) {

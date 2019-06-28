@@ -8,7 +8,10 @@ const tableSize = { width: 5, length: 5 }
 
 const fileReader = new FileReader();
 
-fileReader.readInputFile(path.join(__dirname, 'data/test1.txt'), (data) => {
+// relative path to execute file
+const filePath = 'data/test1.txt';
+
+fileReader.readInputFile(path.join(__dirname, filePath), (data) => {
     printInfo(`Input: ${data.split('\n')}`)
     // Initialize the robot and execute
     const robot = new Robot();

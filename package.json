@@ -1,8 +1,7 @@
 {
   "scripts": {
-    "random-test": "babel-node test/main.js",
+    "random-test": "babel-node test/randomTest.js",
     "file-test": "babel-node test/fileTest.js"
-    
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1"
